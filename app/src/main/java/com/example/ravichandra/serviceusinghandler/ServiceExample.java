@@ -20,7 +20,7 @@ import org.json.JSONArray;
  */
 
 public class ServiceExample extends Service{
-
+    Handler handler;
 
     @Nullable
     @Override
@@ -38,6 +38,8 @@ public class ServiceExample extends Service{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
+
     }
     private void latlongs()
     {
@@ -50,11 +52,14 @@ public class ServiceExample extends Service{
                     public void onResponse(JSONArray response) {
                         Log.d("response", response.toString());
                     //    pDialog.hide();
-                        new Handler().postDelayed(new Runnable() {
+
+                         handler=  new Handler();
+                        Runnable myRunnable = new Runnable() {
                             public void run() {
                                 latlongs();
                             }
-                        }, 5000);
+                        };
+                        handler.postDelayed(myRunnable,3000);
 
                     }
                 }, new Response.ErrorListener() {
@@ -72,4 +77,5 @@ public class ServiceExample extends Service{
         });
         NetworkSingleton.getInstance(getApplicationContext()).addtoRequestQue(req);
     }
+
 }
